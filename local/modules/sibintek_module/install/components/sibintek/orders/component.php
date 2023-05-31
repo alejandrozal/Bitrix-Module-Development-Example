@@ -12,56 +12,21 @@ $hlblock = HL\HighloadBlockTable::getById($hlbl)->fetch();
 $entity = HL\HighloadBlockTable::compileEntity($hlblock);
 $entity_data = $entity->getDataClass();
 
-$request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
-$postValues = $request->getPostList()->toArray();
-$postValues['status'] = 'ACTIVE';
-$postValues['user_id'] = 2;
-$postValues['user_name'] = 'test';
-$postValues['second_name'] = 'test11';
-$postValues['last_name'] = '12123test123';
-$postValues['description'] = 'descr';
-$postValues['title'] = 'tit';
-$postValues['date_created_from'] = "17.04.2020 09:00:00";
-$postValues['date_created_to'] = "17.04.2024 09:00:00";
-$postValues['date_complete_from'] = "17.04.2024 09:00:00";
-$postValues['date_complete_to'] = "17.04.2024 09:00:00";
-
-$pageSize = 1;
-$page = 1;
-
 $list = $entity_data::getlist(
     array(
-        'select' => array('*'
-        ),
-        'filter' => array(
-            array(
-                "LOGIC" => "OR",
-                array(
-                    "UF_STATUS" => $postValues['status'],
-                ),
-                array(
-                    "UF_USER" => $postValues['user_id'],
-                ),
-                array(
-                    "UF_DESCRIPTION" => '%' . $postValues['description'] . '%'
-                ),
-                array(
-                    "UF_TITLE" => '%' . $postValues['title'] . '%'
-                ),
-                array(
-                    ">=UF_DATE_CREATED" => \Bitrix\Main\Type\DateTime::createFromTimestamp(strtotime($postValues['date_created_from'])),
-                    "<=UF_DATE_CREATED" => \Bitrix\Main\Type\DateTime::createFromTimestamp(strtotime($postValues['date_created_to']))
-                ),
-                array(
-                    ">=UF_DATE_COMPLETE" => \Bitrix\Main\Type\DateTime::createFromTimestamp(strtotime($postValues['date_complete_from'])),
-                    "<=UF_DATE_COMPLETE" => \Bitrix\Main\Type\DateTime::createFromTimestamp(strtotime($postValues['date_complete_to']))
-                )
-            )
+        'select' => array(
+            'ID',
+            'USER_NAME' => 'USER.NAME',
+            'USER_SECOND_NAME' => 'USER.SECOND_NAME',
+            'USER_LAST_NAME' => 'USER.LAST_NAME',
+            'UF_TITLE',
+            'UF_STATUS',
+            'UF_DESCRIPTION',
+            'UF_DATE_CREATED',
+            'UF_DATE_COMPLETE'
         ),
         'group' => array('ID'),
         'order' => array('ID' => 'ASC'),
-//        'limit' => $pageSize,
-//        'offset' => $page * $pageSize,
         'count_total' => true,
         'runtime' => array(
             new Entity\ReferenceField(
@@ -75,26 +40,41 @@ $list = $entity_data::getlist(
         )
     )
 );
-$list = $list->fetch();
+$list = $list->fetchAll();
 $result = [];
-foreach ($list as $key => $value) {
-    if ($key == 'UF_DATE_CREATED') {
-        $result['data']['UF_DATE_CREATED'] = $value->toString();
+foreach ($list as $item) {
+    $tmpResult = [];
+    foreach ($item as $key => $value) {
+        if ($key == 'UF_DATE_CREATED') {
+            $tmpResult['data']['UF_DATE_CREATED'] = $value->toString();
+        }
+        if ($key == 'UF_DATE_COMPLETE') {
+            $tmpResult['data']['UF_DATE_COMPLETE'] = $value->toString();
+        }
+        if ($key == 'UF_TITLE') {
+            $tmpResult['data']['UF_TITLE'] = $value;
+        }
+        if ($key == 'UF_STATUS') {
+            $tmpResult['data']['UF_STATUS'] = $value;
+        }
+        if ($key == 'UF_DESCRIPTION') {
+            $tmpResult['data']['UF_DESCRIPTION'] = $value;
+        }
+        if ($key == 'ID') {
+            $tmpResult['data']['ID'] = $value;
+        }
+        if ($key == 'USER_NAME') {
+            $tmpResult['data']['USER_NAME'] = $value;
+        }
+        if ($key == 'USER_SECOND_NAME') {
+            $tmpResult['data']['USER_SECOND_NAME'] = $value;
+        }
+        if ($key == 'USER_LAST_NAME') {
+            $tmpResult['data']['USER_LAST_NAME'] = $value;
+        }
     }
-    if ($key == 'UF_DATE_COMPLETE') {
-        $result['data']['UF_DATE_COMPLETE'] = $value->toString();
-    }
-    if ($key == 'UF_TITLE') {
-        $result['data']['UF_TITLE'] = $value;
-    }
-    if ($key == 'UF_STATUS') {
-        $result['data']['UF_STATUS'] = $value;
-    }
-    if ($key == 'UF_DESCRIPTION') {
-        $result['data']['UF_DESCRIPTION'] = $value;
-    }
+    $result[] = $tmpResult;
 }
-
-$arResult['data'] = [$result];
+$arResult['data'] = $result;
 $this->IncludeComponentTemplate();
 ?>

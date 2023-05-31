@@ -7,11 +7,14 @@ use \Bitrix\Main\UserTable;
 
 CModule::IncludeModule('highloadblock');
 
-$hlbl = 1;
-$hlblock = HL\HighloadBlockTable::getById($hlbl)->fetch();
+$result = HL\HighloadBlockTable::getList(array('filter'=>array('=NAME'=>"Orders")));
+if($row = $result->fetch())
+{
+    $HLBLOCK_ID = $row["ID"];
+}
+$hlblock = HL\HighloadBlockTable::getById($HLBLOCK_ID)->fetch();
 $entity = HL\HighloadBlockTable::compileEntity($hlblock);
 $entity_data = $entity->getDataClass();
-
 $list = $entity_data::getlist(
     array(
         'select' => array(

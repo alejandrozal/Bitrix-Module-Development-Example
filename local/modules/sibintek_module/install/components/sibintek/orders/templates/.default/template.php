@@ -8,20 +8,20 @@ $nav->allowAllRecords(true)
     ->setPageSize($nav_params['nPageSize'])
     ->initFromUri();
 
-$APPLICATION->IncludeComponent('bitrix:main.ui.filter', '', [
-    'FILTER_ID' => 'report_list',
-    'GRID_ID' => 'report_list',
-    'FILTER' => [
-        ['id' => 'UF_DATE_CREATED', 'name' => 'Дата создания', 'type' => 'date'],
-        ['id' => 'UF_DATE_COMPLETE', 'name' => 'Дата завершения', 'type' => 'date'],
-        ['id' => 'UF_STATUS', 'name' => 'Статутс', 'type' => 'list', 'items' => ['1' => 'Все', '2' => 'Активный', '3' => 'Отмененнный', '4' => 'Завершенный'], 'params' => ['multiple' => 'Y']],
-        ['id' => 'UF_DESCRIPTION', 'name' => 'Описание', 'type' => 'string'],
-        ['id' => 'UF_TITLE', 'name' => 'Название', 'type' => 'string'],
-        ['id' => 'USER.NAME', 'name' => 'Имя', 'type' => 'string'],
-    ],
-    'ENABLE_LIVE_SEARCH' => true,
-    'ENABLE_LABEL' => true
-]);
+//$APPLICATION->IncludeComponent('bitrix:main.ui.filter', '', [
+//    'FILTER_ID' => 'report_list',
+//    'GRID_ID' => 'report_list',
+//    'FILTER' => [
+//        ['id' => 'UF_DATE_CREATED', 'name' => 'Дата создания', 'type' => 'date'],
+//        ['id' => 'UF_DATE_COMPLETE', 'name' => 'Дата завершения', 'type' => 'date'],
+//        ['id' => 'UF_STATUS', 'name' => 'Статутс', 'type' => 'list', 'items' => ['1' => 'Все', '2' => 'Активный', '3' => 'Отмененнный', '4' => 'Завершенный'], 'params' => ['multiple' => 'Y']],
+//        ['id' => 'UF_DESCRIPTION', 'name' => 'Описание', 'type' => 'string'],
+//        ['id' => 'UF_TITLE', 'name' => 'Название', 'type' => 'string'],
+//        ['id' => 'USER.NAME', 'name' => 'Имя', 'type' => 'string'],
+//    ],
+//    'ENABLE_LIVE_SEARCH' => true,
+//    'ENABLE_LABEL' => true
+//]);
 
 $APPLICATION->IncludeComponent('bitrix:main.ui.grid', '', [
     'GRID_ID' => 'report_list',
